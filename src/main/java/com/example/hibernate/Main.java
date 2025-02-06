@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @SpringBootApplication(scanBasePackages = "com.example.hibernate")
 @EntityScan(basePackages = "com.example.hibernate.entity")
