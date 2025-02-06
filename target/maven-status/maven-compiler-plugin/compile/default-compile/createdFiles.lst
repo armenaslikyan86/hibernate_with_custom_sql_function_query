@@ -1,0 +1,4 @@
+com/example/hibernate/util/HibernateUtil.class
+com/example/hibernate/entity/Book.class
+com/example/hibernate/controller/BookController.class
+com/example/hibernate/Main.class
