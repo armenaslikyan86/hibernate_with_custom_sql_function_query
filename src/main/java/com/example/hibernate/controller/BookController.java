@@ -1,9 +1,10 @@
 package com.example.hibernate.controller;
 
 import com.example.hibernate.entity.Book;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,18 +16,23 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
+    private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @GetMapping
+    @Transactional(readOnly = true)
     public List<Book> getAllBooks() {
+        logger.info("Fetching all books");
         return entityManager.createQuery("from Book", Book.class).getResultList();
     }
 
     @GetMapping("/padded-titles")
+    @Transactional(readOnly = true)
     public List<Map<String, Object>> getPaddedTitles() {
-        String jpql = "SELECT b.id, FUNCTION('lpad', b.title, 30, '*') FROM Book b";
+        logger.info("Fetching padded titles using custom LPAD function");
+        String jpql = "SELECT b.id, FUNCTION('lpad', b.title, 30, '*') as paddedTitle FROM Book b";
         Query query = entityManager.createQuery(jpql);
 
         @SuppressWarnings("unchecked")
