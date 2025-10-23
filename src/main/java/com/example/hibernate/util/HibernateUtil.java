@@ -1,22 +1,23 @@
 package com.example.hibernate.util;
 
-import org.hibernate.boot.MetadataBuilder;
-import org.hibernate.boot.spi.MetadataBuilderContributor;
-import org.hibernate.dialect.function.StandardSQLFunction;
+import org.hibernate.boot.model.FunctionContributions;
+import org.hibernate.boot.model.FunctionContributor;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Component
 @EnableTransactionManagement
-public class HibernateUtil implements MetadataBuilderContributor {
+public class HibernateUtil implements FunctionContributor {
 
     @Override
-    public void contribute(MetadataBuilder metadataBuilder) {
+    public void contributeFunctions(FunctionContributions functionContributions) {
         // Register custom SQL function
-        metadataBuilder.applySqlFunction(
+        functionContributions.getFunctionRegistry().registerPattern(
             "lpad",
-            new StandardSQLFunction("lpad", StandardBasicTypes.STRING)
+            "lpad(?1, ?2, ?3)",
+            functionContributions.getTypeConfiguration().getBasicTypeRegistry()
+                .resolve(StandardBasicTypes.STRING)
         );
     }
 }
