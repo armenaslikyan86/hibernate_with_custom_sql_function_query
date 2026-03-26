@@ -1,18 +1,16 @@
-package com.example.hibernate.util;
+package com.example.hibernate.persistence;
 
 import org.hibernate.boot.model.FunctionContributions;
 import org.hibernate.boot.model.FunctionContributor;
 import org.hibernate.type.StandardBasicTypes;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Component
-@EnableTransactionManagement
-public class HibernateUtil implements FunctionContributor {
+/**
+ * Registers LPAD so Hibernate can render it from JPQL using the function registry.
+ */
+public class LpadFunctionContributor implements FunctionContributor {
 
     @Override
     public void contributeFunctions(FunctionContributions functionContributions) {
-        // Register custom SQL function
         functionContributions.getFunctionRegistry().registerPattern(
             "lpad",
             "lpad(?1, ?2, ?3)",

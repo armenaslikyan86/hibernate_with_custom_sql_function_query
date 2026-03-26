@@ -40,6 +40,30 @@ The application will start on `http://localhost:8080`
 - `GET /api/books` - List all books
 - `GET /api/books/padded-titles` - Get books with padded titles
 
+## How LPAD Is Wired
+
+Hibernate discovers the custom function contributor through:
+
+- `src/main/resources/META-INF/services/org.hibernate.boot.model.FunctionContributor`
+
+That service file points to `com.example.hibernate.persistence.LpadFunctionContributor`, which registers:
+
+- function name: `lpad`
+- SQL pattern: `lpad(?1, ?2, ?3)`
+- return type: `String`
+
+The controller then calls it from JPQL with:
+
+```java
+function('lpad', b.title, 30, '*')
+```
+
+Hibernate translates that into SQL like:
+
+```sql
+select b1_0.id, lpad(b1_0.title, 30, '*') from books b1_0
+```
+
 ## H2 Console
 
 Access the H2 database console at `http://localhost:8080/h2-console` with these settings:
