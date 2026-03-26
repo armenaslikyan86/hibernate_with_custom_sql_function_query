@@ -1,5 +1,6 @@
 package com.example.hibernate.controller;
 
+import com.example.hibernate.dto.PaddedTitleResponse;
 import com.example.hibernate.entity.Book;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
@@ -8,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/books")
@@ -30,19 +28,15 @@ public class BookController {
 
     @GetMapping("/padded-titles")
     @Transactional(readOnly = true)
-    public List<Map<String, Object>> getPaddedTitles() {
+    public List<PaddedTitleResponse> getPaddedTitles() {
         logger.info("Fetching padded titles using custom LPAD function");
-        String jpql = "SELECT b.id, FUNCTION('lpad', b.title, 30, '*') as paddedTitle FROM Book b";
-        Query query = entityManager.createQuery(jpql);
-
-        @SuppressWarnings("unchecked")
-        List<Object[]> results = query.getResultList();
-
-        return results.stream()
-            .map(result -> Map.of(
-                "id", result[0],
-                "paddedTitle", result[1]
-            ))
-            .collect(Collectors.toList());
+        String jpql = """
+            select new com.example.hibernate.dto.PaddedTitleResponse(
+                b.id,
+                function('lpad', b.title, 30, '*')
+            )
+            from Book b
+            """;
+        return entityManager.createQuery(jpql, PaddedTitleResponse.class).getResultList();
     }
 }

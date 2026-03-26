@@ -3,11 +3,8 @@ package com.example.hibernate;
 import com.example.hibernate.entity.Book;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-@SpringBootApplication(scanBasePackages = "com.example.hibernate")
-@EntityScan(basePackages = "com.example.hibernate.entity")
-@Component
-@EnableTransactionManagement
+@SpringBootApplication
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
